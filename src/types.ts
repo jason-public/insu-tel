@@ -25,7 +25,7 @@ export const DEFAULT_ADMIN_SHA256 = "6da916ebcf5e06401660d5ddb6ac91fac002e20b3bf
 
 export const CATEGORIES_LIST = [
   "전체",
-  "인수위원회",
+  "인수위원",
   "기획자치분과",
   "미래경제분과",
   "도시교통환경분과",

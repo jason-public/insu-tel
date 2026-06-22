@@ -14,7 +14,7 @@ export default function MemberCard({ member, onEdit, isAdminMode }: MemberCardPr
   // Determine division-specific colors for tags
   const getCategoryColor = (cat: string) => {
     switch (cat) {
-      case "인수위원회":
+      case "인수위원":
         return "bg-blue-50 text-blue-700 border-blue-200/60 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800/50";
       case "기획자치분과":
         return "bg-emerald-50 text-emerald-700 border-emerald-200/60 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800/50";

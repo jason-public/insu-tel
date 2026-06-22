@@ -27,7 +27,7 @@ import {
   DEFAULT_ADMIN_SHA256
 } from "./types";
 import { INITIAL_MEMBERS } from "./data";
-import { hashPasscode } from "./utils/crypto";
+import { hashPasscode, verifyPasscode } from "./utils/crypto";
 
 // Sub-components
 import AccessGate from "./components/AccessGate";
@@ -92,7 +92,25 @@ export default function App() {
     const storedMembers = localStorage.getItem("citizen_members_data");
     if (storedMembers) {
       try {
-        setMembers(JSON.parse(storedMembers));
+        let parsed = JSON.parse(storedMembers) as Member[];
+        // Migrate legacy "인수위원회" category -> "인수위원", and "인수인원" role -> "인수위원"
+        let migrated = false;
+        parsed = parsed.map(m => {
+          let updated = { ...m };
+          if (m.category === "인수위원회") {
+            migrated = true;
+            updated.category = "인수위원";
+          }
+          if (m.role === "인수인원") {
+            migrated = true;
+            updated.role = "인수위원";
+          }
+          return updated;
+        });
+        if (migrated) {
+          localStorage.setItem("citizen_members_data", JSON.stringify(parsed));
+        }
+        setMembers(parsed);
       } catch (e) {
         console.error("Failed to parse members data", e);
         setMembers(INITIAL_MEMBERS);
@@ -181,8 +199,8 @@ export default function App() {
       return;
     }
 
-    const hashed = await hashPasscode(elevationPass.trim());
-    if (hashed === securityConfig.adminPasswordHash) {
+    const isMatched = await verifyPasscode(elevationPass.trim(), securityConfig.adminPasswordHash);
+    if (isMatched) {
       handleGrantAccess("admin");
       setShowElevationModal(false);
       setElevationPass("");
@@ -199,7 +217,11 @@ export default function App() {
 
     // Category filtering
     if (activeCategory !== "전체") {
-      list = list.filter(m => m.category === activeCategory);
+      if (activeCategory === "인수위원") {
+        list = list.filter(m => m.category === "인수위원" || m.role?.includes("분과장") || m.role?.includes("인수위원"));
+      } else {
+        list = list.filter(m => m.category === activeCategory);
+      }
     }
 
     // Keyword & Name & Phone comprehensive search
@@ -251,7 +273,7 @@ export default function App() {
                 </div>
                 <div>
                   <h1 className="text-lg font-bold tracking-tight">시민주권위원회 위원 수록</h1>
-                  <p className="text-[10px] text-slate-400 font-mono">인수위원회 및 자문위원 통합 관리 명부 v1.4</p>
+                  <p className="text-[10px] text-slate-400 font-mono">인수위원 및 자문위원 통합 관리 명부 v1.4</p>
                 </div>
               </div>
 
@@ -476,7 +498,7 @@ export default function App() {
           {/* Footer of applet */}
           <footer className="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 mt-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs space-y-2">
-              <p className="font-semibold text-slate-300">© 2026 시민주권위원회 인수위원회 & 자문위원회 명부 보안 시스템.</p>
+              <p className="font-semibold text-slate-300">© 2026 시민주권위원회 인수위원 & 자문위원회 명부 보안 시스템.</p>
               <p>본 사이트의 기재 위원 연락처 및 경력 정보는 공무 목적 이외의 용도로 상호 전재 및 상업적 유출을 금합니다.</p>
               <p className="text-[10px] text-slate-550">시스템은 SHA-256 비가역 암호화 해시 및 세션 세이프가드로 원천 보호되고 있습니다.</p>
             </div>

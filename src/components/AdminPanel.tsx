@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Plus, Save, Trash2, Key, Shield, UserPlus, AlertCircle, CheckCircle, RefreshCcw, Lock } from "lucide-react";
 import { Member, SecurityConfig, CATEGORIES_LIST } from "../types";
-import { hashPasscode } from "../utils/crypto";
+import { hashPasscode, verifyPasscode } from "../utils/crypto";
 
 interface AdminPanelProps {
   members: Member[];
@@ -114,8 +114,8 @@ export default function AdminPanel({
     }
 
     // Verify current admin pass using hashing matches
-    const currentAdminHash = await hashPasscode(secForm.currentAdminPass);
-    if (currentAdminHash !== securityConfig.adminPasswordHash) {
+    const isMatched = await verifyPasscode(secForm.currentAdminPass, securityConfig.adminPasswordHash);
+    if (!isMatched) {
       setSecError("입력하신 현재 관리자 비밀번호가 암호화 검증에서 일치하지 않습니다.");
       return;
     }
@@ -179,7 +179,7 @@ export default function AdminPanel({
             통합 관리 제어실 (Admin Controller)
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            인수위원회 위원들의 전체 명부 데이터 관리 및 시스템 전반의 핵심 보안 설정을 조율합니다.
+            인수위원 명부 데이터 관리 및 시스템 전반의 핵심 보안 설정을 조율합니다.
           </p>
         </div>
         
