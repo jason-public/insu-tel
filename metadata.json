@@ -1,0 +1,6 @@
+{
+  "name": "시민주권위원회 위원 명부 시스템",
+  "description": "시민주권위원회의 인수위원과 자문위원 정보를 안전하게 조회, 검색 및 관리할 수 있는 명부 관리 시스템",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
