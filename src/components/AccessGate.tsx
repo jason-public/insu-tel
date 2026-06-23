@@ -125,12 +125,7 @@ export default function AccessGate({ accessHash, adminHash, onGrantAccess }: Acc
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700/50 text-center">
-            <p className="text-xs text-slate-400 dark:text-slate-500">
-              * 기밀 보안 유지를 위한 접속 제어 장치입니다.<br/>
-              * 초기 접속용 비밀번호는 <code className="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-700 dark:text-slate-300 font-mono font-semibold">2026</code> 이며, 관리자용은 <code className="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-700 dark:text-slate-300 font-mono font-semibold">admin2026</code> 입니다.
-            </p>
-          </div>
+
         </div>
       </div>
     </div>
